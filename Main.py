@@ -34,18 +34,47 @@ class Player:
         #https://galaxian.fandom.com/wiki/Gyaraga
         self.raw_player_image = pygame.image.load(os.path.join("Images", "Galaga Ship.png"))
         self.player_image = pygame.transform.scale(self.raw_player_image, (self.player_sizex, self.player_sizey))
-
+    #Draw the player on the screen with its attributes
     def draw(self):
         WIN.blit(self.player_image, (self.playerx, self.playery))
+    #Allow for the player to move about the screen within reason.
+    def movement(self, hit_wall):
+        #If the player is hitting a barrier, dont allow them to move
+        if hit_wall == False:
+            #Free player movement
+            if keys_pressed[pygame.K_RIGHT]:
+                self.playerx += 5
+            elif keys_pressed[pygame.K_LEFT]:
+                self.playerx -= 5
+            elif keys_pressed[pygame.K_UP]:
+                self.playery -= 5
+            elif keys_pressed[pygame.K_DOWN]:
+                self.playery += 5
+        #Contains the player within a set box on the screen by checking its position
+        hit_wall = True
+        if self.playerx <= 0:
+            self.playerx += 5
+        elif self.playerx >= 290:
+            self.playerx -= 5
+        elif self.playery <= 0:
+            self.playery += 5
+        elif self.playery >= 418:
+            self.playery -= 5
+        else:
+            hit_wall = False
+        #Returning whether or not the player has hit a wall
+        return(hit_wall)
+        
+
 
         
         
 #Defining an enemy class so we can make more than one very easily
 class Enemy:
     #Initializing the class variables
-    def __init__(self):
+    def __init__(self, x, y):
         #Setting variables for the player
-        self.enemyx, self.enemyy = 145, 150
+        self.enemyx, self.enemyy = x, y
         self.enemy_sizex, self.enemy_sizey = 30, 32
         self.hurtbox = pygame.Rect(self.enemyx, self.enemyy, self.enemy_sizex, self.enemy_sizey)
         #Getting the enemy (alien) image
@@ -59,12 +88,17 @@ class Enemy:
 
 #Class instance definition
 player1 = Player() 
-enemies = [Enemy()]
+#List containing all of the enemies on the screen, this can be appended and removed based
+#On the actions being taken by the user
+enemies = [Enemy(145, 150), Enemy(115, 150), Enemy(175, 150)]
 #Draws all of the necessary elements on the screen
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
     player1.draw()
-    enemies[0].draw()
+    #For loop to draw all of the enemies in the 'enemies' list on the screen
+    for enemy in enemies:
+        enemies[enemy].draw()
+
     #Updates the screen
     pygame.display.update()  
 
@@ -90,5 +124,4 @@ while True:
             pygame.quit()
             sys.exit()
 
-
-
+#END OF LINE
