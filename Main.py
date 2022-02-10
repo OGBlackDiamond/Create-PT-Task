@@ -89,6 +89,22 @@ player1 = Player()
 #List containing all of the enemies on the screen, this can be appended and removed based
 #On the actions being taken by the user
 enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150)]
+
+#Function to allow the enemies to move across the screen in an orderly fashion
+def enemy_movement():
+    #Making the row of enemies bounce from each side of the screen
+    if enemies[0].enemyx <= 0:
+        movement_unitx = 3
+        movement_unity = 1
+    elif enemies[enemies.len()] >= 480:
+        movement_unitx = -3
+        movement_unity = 1
+    #Loop to move all of the enemies by the movement unit
+    for i in range(enemies.len()):
+        enemies[i].enemyx += movement_unitx
+        enemies[i].enemyy += movement_unity
+        movement_unity = 0
+
 #Draws all of the necessary elements on the screen
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
