@@ -38,7 +38,7 @@ class Player:
     def draw(self):
         WIN.blit(self.player_image, (self.playerx, self.playery))
     #Allow for the player to move about the screen within reason.
-    def movement(self, hit_wall):
+    def movement(self, hit_wall = False):
         #If the player is hitting a barrier, dont allow them to move
         if hit_wall == False:
             #Free player movement
@@ -56,7 +56,7 @@ class Player:
             self.playerx += 5
         elif self.playerx >= 290:
             self.playerx -= 5
-        elif self.playery <= 0:
+        elif self.playery <= 350:
             self.playery += 5
         elif self.playery >= 418:
             self.playery -= 5
@@ -90,14 +90,15 @@ class Enemy:
 player1 = Player() 
 #List containing all of the enemies on the screen, this can be appended and removed based
 #On the actions being taken by the user
-enemies = [Enemy(145, 150), Enemy(115, 150), Enemy(175, 150)]
+enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150)]
 #Draws all of the necessary elements on the screen
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
     player1.draw()
     #For loop to draw all of the enemies in the 'enemies' list on the screen
-    for enemy in enemies:
-        enemies[enemy].draw()
+    for i in range(len(enemies)):
+        enemies[i].draw()
+
 
     #Updates the screen
     pygame.display.update()  
@@ -117,6 +118,7 @@ while True:
 
     #Main game loop
     draw()
+    player1.movement()
 
     #Lets the code stop running when the window is closed
     for event in pygame.event.get():
