@@ -151,7 +151,10 @@ while True:
 
     #Main game loop
     draw()
+    enemy_movement()
     player1.movement()
+    for i in range(len(enemies)):
+        enemies[i].hurtbox_detection()
 
     #Lets the code stop running when the window is closed
     for event in pygame.event.get():
