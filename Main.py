@@ -37,10 +37,12 @@ class Player:
     #Draw the player on the screen with its attributes
     def draw(self):
         WIN.blit(self.player_image, (self.playerx, self.playery))
+        if self.shot:
+            pygame.draw.rect(WIN, (255, 0, 0), self.bullet)
     #Allow for the player to move about the screen within reason.
     def movement(self, hit_wall = False):
         #If the player is hitting a barrier, dont allow them to move
-        if hit_wall == False:
+        if self.hit_wall == False:
             #Free player movement
             if keys_pressed[pygame.K_RIGHT]:
                 self.playerx += 5
@@ -51,7 +53,7 @@ class Player:
             elif keys_pressed[pygame.K_DOWN]:
                 self.playery += 5
         #Contains the player within a set box on the screen by checking its position
-        hit_wall = True
+        self.hit_wall = True
         if self.playerx <= 0:
             self.playerx += 5
         elif self.playerx >= 290:
@@ -61,8 +63,18 @@ class Player:
         elif self.playery >= 418:
             self.playery -= 5
         else:
-            hit_wall = False
-        
+            self.hit_wall = False
+    #Allow the player to shoot bullets
+    def shoot(self, shot = False):
+        self.bullet = pygame.Rect(self.playerx / 2, self.playery / 2, 30, 60)
+        if keys_pressed[pygame.K_RSHIFT]:
+            self.shot = True
+        if self.shot:
+            self.bullet.x += 7
+        else:
+            self.bullet.x = self.playerx / 2
+            self.bullet.y = self.playerx / 2
+#End of class definition  
 
 
         
@@ -80,9 +92,16 @@ class Enemy:
         #https://supersmashbros.fandom.com/wiki/Boss_Galaga
         self.raw_enemy_image = pygame.image.load(os.path.join("Images", "Galaga Enemy.png"))
         self.enemy_image = pygame.transform.scale(self.raw_enemy_image, (self.enemy_sizex, self.enemy_sizey))
-
+    #Drawing the enemy on the screen
     def draw(self):
-        WIN.blit(self.enemy_image, (self.enemyx, self.enemyy))
+        if self.hit == False:
+            WIN.blit(self.enemy_image, (self.enemyx, self.enemyy))
+    #Telling if the enemy has been hit
+    def hurtbox_detection(self):
+        if pygame.Rect.colliderect(player1.bullet, self.hurtbox):
+            self.hit = True
+
+#End of class definition
 
 #Class instance definition
 player1 = Player() 
