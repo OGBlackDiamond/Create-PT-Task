@@ -62,8 +62,6 @@ class Player:
             self.playery -= 5
         else:
             hit_wall = False
-        #Returning whether or not the player has hit a wall
-        return(hit_wall)
         
 
 
