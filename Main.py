@@ -26,6 +26,7 @@ class Player:
     #Initializing the class variables
     def __init__(self):
         #Setting variables for the player
+        self.lives = 3
         self.playerx, self.playery = 145, 400
         self.player_sizex, self.player_sizey = 30, 32
         self.hurtbox = pygame.Rect(self.playerx, self.playery, self.player_sizex, self.player_sizey)
@@ -64,6 +65,7 @@ class Player:
             self.playery -= 5
         else:
             self.hit_wall = False
+
     #Allow the player to shoot bullets
     def shoot(self, shot = False):
         self.bullet = pygame.Rect(self.playerx / 2, self.playery / 2, 30, 60)
@@ -74,6 +76,11 @@ class Player:
         else:
             self.bullet.x = self.playerx / 2
             self.bullet.y = self.playerx / 2
+
+    #Allow the player to lose a life when the enemies touch the player or the end of the screen
+    #def lose_life(self):
+
+        
 #End of class definition  
 
 
@@ -82,8 +89,9 @@ class Player:
 #Defining an enemy class so we can make more than one very easily
 class Enemy:
     #Initializing the class variables
-    def __init__(self, x, y):
-        #Setting variables for the player
+    def __init__(self, x, y = 150):
+        #Setting variables for the enemy
+        self.hit_end = False
         self.enemyx, self.enemyy = x, y
         self.enemy_sizex, self.enemy_sizey = 30, 32
         self.hurtbox = pygame.Rect(self.enemyx, self.enemyy, self.enemy_sizex, self.enemy_sizey)
@@ -98,8 +106,10 @@ class Enemy:
             WIN.blit(self.enemy_image, (self.enemyx, self.enemyy))
     #Telling if the enemy has been hit
     def hurtbox_detection(self):
-        if pygame.Rect.colliderect(player1.bullet, self.hurtbox):
+        if pygame.Rect.colliderect(player1.bullet, self.hurtbox) or pygame.Rect.colliderect(player1.hurtbox, self.hurtbox):
             self.hit = True
+        if self.enemyy + 32 == HEIGHT:
+            self.hit_end == True
 
 #End of class definition
 
@@ -114,10 +124,10 @@ def enemy_movement():
     #Making the row of enemies bounce from each side of the screen
     if enemies[0].enemyx <= 0:
         movement_unitx = 3
-        movement_unity = 1
     elif enemies[enemies.len()] >= 480:
         movement_unitx = -3
-        movement_unity = 1
+    elif enemies[round(enemies.len() / 2, 0)] == 138:
+        movement_unity = 32
     #Loop to move all of the enemies by the movement unit
     for i in range(enemies.len()):
         enemies[i].enemyx += movement_unitx
@@ -153,8 +163,13 @@ while True:
     draw()
     enemy_movement()
     player1.movement()
+    #This loop checks if the enemy has been hit by one of the player's bullets
     for i in range(len(enemies)):
         enemies[i].hurtbox_detection()
+        #Removing the enemy from the list, should it be hit
+        if enemies[i].hit:
+            player1.shot = False
+            enemies.remove(i)
 
     #Lets the code stop running when the window is closed
     for event in pygame.event.get():
