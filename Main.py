@@ -4,7 +4,7 @@
 import pygame
 import sys  
 import os
-from pygame import draw
+from pygame import K_RSHIFT, draw
 #Initializing the meathods for pygame
 pygame.init()
 #Setting the window title
@@ -26,10 +26,13 @@ class Player:
     #Initializing the class variables
     def __init__(self):
         #Setting variables for the player
+        self.shot = False
+        self.hit_wall = False
         self.lives = 3
         self.playerx, self.playery = 145, 400
         self.player_sizex, self.player_sizey = 30, 32
         self.hurtbox = pygame.Rect(self.playerx, self.playery, self.player_sizex, self.player_sizey)
+        self.bullet = pygame.Rect(self.playerx + 13, self.playery, 3, 30)
         #Getting the player (spaceship) image
         #All credit to the image used goes to:
         #https://galaxian.fandom.com/wiki/Gyaraga
@@ -37,11 +40,11 @@ class Player:
         self.player_image = pygame.transform.scale(self.raw_player_image, (self.player_sizex, self.player_sizey))
     #Draw the player on the screen with its attributes
     def draw(self):
-        WIN.blit(self.player_image, (self.playerx, self.playery))
         if self.shot:
-            pygame.draw.rect(WIN, (255, 0, 0), self.bullet)
+            pygame.draw.rect(WIN, (255, 0, 0), player1.bullet)
+        WIN.blit(self.player_image, (self.playerx, self.playery))
     #Allow for the player to move about the screen within reason.
-    def movement(self, hit_wall = False):
+    def movement(self):
         #If the player is hitting a barrier, dont allow them to move
         if self.hit_wall == False:
             #Free player movement
@@ -67,15 +70,17 @@ class Player:
             self.hit_wall = False
 
     #Allow the player to shoot bullets
-    def shoot(self, shot = False):
-        self.bullet = pygame.Rect(self.playerx / 2, self.playery / 2, 30, 60)
-        if keys_pressed[pygame.K_RSHIFT]:
-            self.shot = True
-        if self.shot:
-            self.bullet.x += 7
-        else:
-            self.bullet.x = self.playerx / 2
-            self.bullet.y = self.playerx / 2
+    def shoot(self):
+        #Shoots the bullet
+        self.shot = True
+        while self.shot:
+            self.bullet.y -= 7
+
+        #Resets the bullet
+        if self.bullet.x <= 0:
+            self.bullet.x = self.playerx
+            self.bullet.y = self.playery
+            self.shot = False
 
     #Allow the player to lose a life when the enemies touch the player or the end of the screen
     #def lose_life(self):
@@ -91,6 +96,7 @@ class Enemy:
     #Initializing the class variables
     def __init__(self, x, y = 150):
         #Setting variables for the enemy
+        self.hit = False
         self.hit_end = False
         self.enemyx, self.enemyy = x, y
         self.enemy_sizex, self.enemy_sizey = 30, 32
@@ -108,6 +114,7 @@ class Enemy:
     def hurtbox_detection(self):
         if pygame.Rect.colliderect(player1.bullet, self.hurtbox) or pygame.Rect.colliderect(player1.hurtbox, self.hurtbox):
             self.hit = True
+            player1.shot = False
         if self.enemyy + 32 == HEIGHT:
             self.hit_end == True
 
@@ -121,18 +128,18 @@ enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150)]
 
 #Function to allow the enemies to move across the screen in an orderly fashion
 def enemy_movement():
+    movement_unitx, movement_unity = 0, 0
     #Making the row of enemies bounce from each side of the screen
     if enemies[0].enemyx <= 0:
         movement_unitx = 3
-    elif enemies[enemies.len()] >= 480:
+    elif enemies[len(enemies) - 1].enemyx >= 480:
         movement_unitx = -3
-    elif enemies[round(enemies.len() / 2, 0)] == 138:
+    elif enemies[round(len(enemies) / 2)] == 138:
         movement_unity = 32
     #Loop to move all of the enemies by the movement unit
-    for i in range(enemies.len()):
+    for i in range(len(enemies)):
         enemies[i].enemyx += movement_unitx
         enemies[i].enemyy += movement_unity
-        movement_unity = 0
 
 #Draws all of the necessary elements on the screen
 def draw():
@@ -163,13 +170,15 @@ while True:
     draw()
     enemy_movement()
     player1.movement()
+    if keys_pressed[K_RSHIFT]:
+            player1.shoot()
     #This loop checks if the enemy has been hit by one of the player's bullets
-    for i in range(len(enemies)):
+    for i in range(len(enemies) - 1):
         enemies[i].hurtbox_detection()
         #Removing the enemy from the list, should it be hit
         if enemies[i].hit:
             player1.shot = False
-            enemies.remove(i)
+            del enemies[i]
 
     #Lets the code stop running when the window is closed
     for event in pygame.event.get():
