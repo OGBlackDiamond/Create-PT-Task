@@ -128,16 +128,16 @@ enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150)]
 def enemy_movement():
     movement_unitx, movement_unity = 0, 0
     #Making the row of enemies bounce from each side of the screen
-    if enemies[0].enemyx <= 0:
-        movement_unitx = 3
-    elif enemies[len(enemies) - 1].enemyx >= 480:
-        movement_unitx = -3
-    elif enemies[round(len(enemies) / 2)] == 138:
-        movement_unity = 32
-    #Loop to move all of the enemies by the movement unit
     for i in range(len(enemies)):
-        enemies[i].enemyx += movement_unitx
-        enemies[i].enemyy += movement_unity
+        if enemies[i].enemyx <= 0:
+            movement_unitx = 3
+        elif enemies[i].enemyx >= 480:
+            movement_unitx = -3
+        elif enemies[i] == 138:
+            movement_unity = 32
+    #Loop to move all of the enemies by the movement unit
+    enemies[i].enemyx += movement_unitx
+    enemies[i].enemyy += movement_unity
 
 #Draws all of the necessary elements on the screen
 def draw():
