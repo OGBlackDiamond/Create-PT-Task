@@ -81,7 +81,6 @@ class Player:
             self.bullet.y = self.playery
 
     #Allow the player to lose a life when the enemies touch the player or the end of the screen
-    #def lose_life(self):
 
         
 #End of class definition  
@@ -123,6 +122,9 @@ player1 = Player()
 #List containing all of the enemies on the screen, this can be appended and removed based
 #On the actions being taken by the user
 enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150)]
+
+#Function that lets the player loses a life when conditions are met
+
 
 #Function to allow the enemies to move across the screen in an orderly fashion
 def enemy_movement():
