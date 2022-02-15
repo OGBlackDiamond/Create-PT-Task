@@ -27,6 +27,7 @@ class Player:
     def __init__(self):
         #Setting variables for the player
         self.shot = False
+        self.bang = False
         self.hit_wall = False
         self.lives = 3
         self.playerx, self.playery = 145, 400
@@ -40,7 +41,7 @@ class Player:
         self.player_image = pygame.transform.scale(self.raw_player_image, (self.player_sizex, self.player_sizey))
     #Draw the player on the screen with its attributes
     def draw(self):
-        if self.shot:
+        if self.shot or self.bang:
             pygame.draw.rect(WIN, (255, 0, 0), player1.bullet)
         WIN.blit(self.player_image, (self.playerx, self.playery))
     #Allow for the player to move about the screen within reason.
@@ -72,15 +73,16 @@ class Player:
     #Allow the player to shoot bullets
     def shoot(self):
         #Shoots the bullet
-        self.shot = True
-        while self.shot:
-            self.bullet.y -= 7
+        if self.bang:
+            self.bullet.y -= 10
 
         #Resets the bullet
         if self.bullet.x <= 0:
-            self.bullet.x = self.playerx
-            self.bullet.y = self.playery
-            self.shot = False
+            self.bang = False
+            if self.shot == False and self.bang == False:
+                self.bullet.x = self.playerx + 13
+                self.bullet.y = self.playery
+
 
     #Allow the player to lose a life when the enemies touch the player or the end of the screen
     #def lose_life(self):
@@ -127,8 +129,9 @@ player1 = Player()
 enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150)]
 
 #Function to allow the enemies to move across the screen in an orderly fashion
+movement_unitx, movement_unity = 0, 0
 def enemy_movement():
-    movement_unitx, movement_unity = 0, 0
+    global movement_unitx, movement_unity
     #Making the row of enemies bounce from each side of the screen
     if enemies[0].enemyx <= 0:
         movement_unitx = 3
@@ -136,8 +139,10 @@ def enemy_movement():
         movement_unitx = -3
     elif enemies[round(len(enemies) / 2)] == 138:
         movement_unity = 32
+    else:
+        movement_unitx = 3
     #Loop to move all of the enemies by the movement unit
-    for i in range(len(enemies)):
+    for i in range(len(enemies) - 1):
         enemies[i].enemyx += movement_unitx
         enemies[i].enemyy += movement_unity
 
@@ -171,7 +176,15 @@ while True:
     enemy_movement()
     player1.movement()
     if keys_pressed[K_RSHIFT]:
-            player1.shoot()
+        player1.shot = True
+        player1.bang = True
+        player1.bullet.y = player1.playery
+        player1.bullet.x = player1.playerx + 13
+    else:
+        player1.shot = False
+
+        
+    player1.shoot() 
     #This loop checks if the enemy has been hit by one of the player's bullets
     for i in range(len(enemies) - 1):
         enemies[i].hurtbox_detection()
