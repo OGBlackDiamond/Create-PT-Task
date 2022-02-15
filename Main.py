@@ -123,8 +123,22 @@ player1 = Player()
 #On the actions being taken by the user
 #Making a filler object, so the list can be looped through effectivley. 
 filler_enemy = Enemy(-1000, -1000)
-enemies = [Enemy(145, 150), Enemy(105, 150), Enemy(185, 150), filler_enemy]
+enemies = [Enemy(105, 150), Enemy(145, 150), Enemy(185, 150), filler_enemy]
 
+#Function to spawn new enemies when a level has been cleared
+def new_level(level):
+    if len(enemies) <= 1 :
+        for i in range(level):
+            if level <= 4 and level % 2 == 0:
+                spacing_ammount = (level * -20)
+                for j in range(level / 2):
+                    spacing_ammount += 40
+                    enemies.append(Enemy((WIDTH / 2) + spacing_ammount))
+                else:
+                    spacing_ammount = 0
+                    for k in range(level / 2):
+                        spacing_ammount += 40
+                        enemies.append(Enemy((WIDTH / 2) + spacing_ammount, spacing_ammount))
 #Function that lets the player loses a life when conditions are met
 movement_unitx = 1
 #Setting the enemy movement variables
