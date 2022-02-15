@@ -125,11 +125,13 @@ player1 = Player()
 filler_enemy = Enemy(-1000, -1000)
 enemies = [Enemy(105, 150), Enemy(145, 150), Enemy(185, 150), filler_enemy]
 
+#Variable to keep track of the levels that have passed
+current_level = 3
 #Function to spawn new enemies when a level has been cleared
 def new_level(level):
     if len(enemies) <= 1 :
         for i in range(level):
-            if level <= 4 and level % 2 == 0:
+            if level >= 4:
                 spacing_ammount = (level * -20)
                 for j in range(level / 2):
                     spacing_ammount += 40
@@ -139,6 +141,12 @@ def new_level(level):
                     for k in range(level / 2):
                         spacing_ammount += 40
                         enemies.append(Enemy((WIDTH / 2) + spacing_ammount, spacing_ammount))
+
+            else:
+                spacing_ammount = 60
+                for l in range(level):
+                    spacing_ammount += 40
+                    enemies.append(Enemy(WIDTH / 2) + spacing_ammount)
 #Function that lets the player loses a life when conditions are met
 movement_unitx = 1
 #Setting the enemy movement variables
@@ -189,6 +197,12 @@ while True:
     draw()
     enemy_movement()
     player1.movement()
+    if len(enemies) <= 1:
+        if current_level == 3:
+            current_level += 1
+        else:
+            current_level += 2
+        new_level(current_level)
     if keys_pressed[K_RSHIFT]:
         player1.shot = True
     if player1.bullet.y <= 0:
