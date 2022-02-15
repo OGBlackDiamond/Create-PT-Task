@@ -72,7 +72,7 @@ class Player:
     #Allow the player to shoot bullets
     def shoot(self):
         #Shoots the bullet
-        while self.shot:
+        if self.shot:
             self.bullet.y -= 12
 
         #Resets the bullet
@@ -172,7 +172,7 @@ while True:
     player1.movement()
     if keys_pressed[K_RSHIFT]:
         player1.shot = True
-    if player1.bullet.x <= 0:
+    if player1.bullet.y <= 0:
         player1.shot = False
     player1.shoot()
     #This loop checks if the enemy has been hit by one of the player's bullets
