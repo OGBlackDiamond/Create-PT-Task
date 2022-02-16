@@ -1,7 +1,6 @@
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
-from shutil import move
 from numpy import integer
 import pygame
 import sys  
@@ -137,7 +136,7 @@ def new_level(level):
             if i >= ((level / 2) - 1):
                 enemies.insert(0, Enemy(((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 25) + 50), 110))
             else:
-                enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
+                enemies.insert(0, Enemy((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 5)))
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
         spacing_ammount += 30
