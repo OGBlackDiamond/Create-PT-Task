@@ -133,8 +133,15 @@ def new_level(level):
     starting_pos = ((level /2) * spacing_ammount)
     movement_unitx = -1
     for i in range(level):
-        enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
+        if level >= 5:
+            if i >= ((level / 2) - 1):
+                enemies.insert(0, Enemy(((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 25) + 50), 110))
+            else:
+                enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
+        else:
+            enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
         spacing_ammount += 30
+
 
 
 
