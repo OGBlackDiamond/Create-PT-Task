@@ -1,6 +1,7 @@
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
+from shutil import move
 from numpy import integer
 import pygame
 import sys  
@@ -126,14 +127,25 @@ player1 = Player()
 filler_enemy = Enemy(-1000, -1000)
 enemies = [Enemy(105, 150), Enemy(145, 150), Enemy(185, 150), filler_enemy]
 
-#Variable to keep track of the levels that have passed
-current_level = [1, 1, 1]
-#Function to spawn new enemies when a level has been cleared
 def new_level(level):
+    global movement_unitx
+    spacing_ammount = 50
+    starting_pos = ((level /2) * spacing_ammount)
+    movement_unitx = -1
+    for i in range(level):
+        enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
+        spacing_ammount += 30
+
+
+
+#Variable to keep track of the levels that have passed
+current_level = 3
+#Function to spawn new enemies when a level has been cleared
+def new_level_unstable(level):
     if len(enemies) <= 1 :
         for i in level:
-            if i >= len(level) / 2:
-                break
+            #if i >= len(level) / 2:
+                #break
             if len(level) >= 4:
                 spacing_ammount = (len(level) * -20)
                 for j in level:
@@ -161,23 +173,22 @@ def new_level(level):
                     enemies.insert(0, Enemy(WIDTH / 2) + spacing_ammount)
 
 #Function that lets the player loses a life when conditions are met
-movement_unitx = 1
+movement_unitx = -1
 #Setting the enemy movement variables
 #Function to allow the enemies to move across the screen in an orderly fashion
 def enemy_movement():
     global movement_unitx
-    move_down = False
     #Making the row of enemies bounce from each side of the screen
     for i in range(len(enemies)):
         if enemies[i].enemyx == 0:
             movement_unitx = 1
-            move_down = True
+            for j in range(len(enemies)):
+                enemies[j].enemyy += 32
         elif enemies[i].enemyx == WIDTH - 30:
             movement_unitx = -1
         #Loop to move all of the enemies by the movement unit
         enemies[i].enemyx += movement_unitx
-        if move_down:
-            enemies[i - 1].enemyy += 32
+            
 #Draws all of the necessary elements on the screen
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
@@ -205,12 +216,7 @@ while True:
     enemy_movement()
     player1.movement()
     if len(enemies) <= 1:
-        if len(current_level) == 3:
-            current_level.append(1)
-        else:
-            current_level.append(1)
-            current_level.append(1)
-        print(len(enemies))
+        current_level += 1
         new_level(current_level)
     if keys_pressed[K_RSHIFT]:
         player1.shot = True
