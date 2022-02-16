@@ -1,11 +1,12 @@
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
-from numpy import integer
 import pygame
 import sys  
 import os
 from pygame import K_RSHIFT, draw
+#Initializing the font for the score
+pygame.font.init()
 #Initializing the meathods for pygame
 pygame.init()
 #Setting the window title
@@ -27,6 +28,7 @@ class Player:
     #Initializing the class variables
     def __init__(self):
         #Setting variables for the player
+        self.score = 0
         self.shot = False
         self.hit_wall = False
         self.lives = 3
@@ -140,6 +142,7 @@ def new_level(level):
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
         spacing_ammount += 30
+    return(level)
 
 
 
@@ -199,11 +202,22 @@ def enemy_movement():
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
     player1.draw()
+    draw_text("Level: " + str(current_level - 2), 30 , 0, 0)
+    draw_text(("Score: " + str(player1.score)), 30, 0, 30)
     #For loop to draw all of the enemies in the 'enemies' list on the screen
     for i in range(len(enemies)):
         enemies[i].draw()
     #Updates the screen
     pygame.display.update()  
+
+#Function to draw text
+def draw_text(text, size, posx, posy):
+    global text_display
+    font = pygame.font.Font(None , size)
+    text_display =font.render(text, True, (255, 255, 255))
+    WIN.blit(text_display,(posx, posy))
+
+
 #Making the game loop
 while True:
     #Using the FPS variable to run the app
@@ -237,6 +251,7 @@ while True:
         enemies[i].hurtbox_detection()
         #Removing the enemy from the list, should it be hit
         if enemies[i].hit:
+            player1.score += 1
             player1.shot = False
             del enemies[i]
 
