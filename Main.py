@@ -1,6 +1,7 @@
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
+from numpy import integer
 import pygame
 import sys  
 import os
@@ -126,27 +127,39 @@ filler_enemy = Enemy(-1000, -1000)
 enemies = [Enemy(105, 150), Enemy(145, 150), Enemy(185, 150), filler_enemy]
 
 #Variable to keep track of the levels that have passed
-current_level = 3
+current_level = [1, 1, 1]
 #Function to spawn new enemies when a level has been cleared
 def new_level(level):
     if len(enemies) <= 1 :
-        for i in range(level):
-            if level >= 4:
-                spacing_ammount = (level * -20)
-                for j in range(level / 2):
+        for i in level:
+            if i >= len(level) / 2:
+                break
+            if len(level) >= 4:
+                spacing_ammount = (len(level) * -20)
+                for j in level:
+                    if j >= len(level) / 2:
+                        break
                     spacing_ammount += 40
-                    enemies.append(Enemy((WIDTH / 2) + spacing_ammount))
+                    enemies.insert(0, Enemy((WIDTH / 2) + spacing_ammount))
                 else:
                     spacing_ammount = 0
-                    for k in range(level / 2):
+                    for k in level:
+                        if k >= len(level) / 2:
+                            break
                         spacing_ammount += 40
-                        enemies.append(Enemy((WIDTH / 2) + spacing_ammount, spacing_ammount))
+                        if k >= 1:
+                            enemies.insert(0, Enemy((WIDTH / 2) + spacing_ammount, spacing_ammount))
+                        else:
+                            enemies.insert(0, Enemy((WIDTH / 2) + spacing_ammount))
 
             else:
                 spacing_ammount = 60
-                for l in range(level):
+                for l in level:
+                    if l >= len(level) / 2:
+                        break
                     spacing_ammount += 40
-                    enemies.append(Enemy(WIDTH / 2) + spacing_ammount)
+                    enemies.insert(0, Enemy(WIDTH / 2) + spacing_ammount)
+
 #Function that lets the player loses a life when conditions are met
 movement_unitx = 1
 #Setting the enemy movement variables
@@ -161,13 +174,10 @@ def enemy_movement():
             move_down = True
         elif enemies[i].enemyx == WIDTH - 30:
             movement_unitx = -1
-
         #Loop to move all of the enemies by the movement unit
         enemies[i].enemyx += movement_unitx
         if move_down:
             enemies[i - 1].enemyy += 32
-
-
 #Draws all of the necessary elements on the screen
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
@@ -175,11 +185,8 @@ def draw():
     #For loop to draw all of the enemies in the 'enemies' list on the screen
     for i in range(len(enemies)):
         enemies[i].draw()
-
-
     #Updates the screen
     pygame.display.update()  
-
 #Making the game loop
 while True:
     #Using the FPS variable to run the app
@@ -198,10 +205,12 @@ while True:
     enemy_movement()
     player1.movement()
     if len(enemies) <= 1:
-        if current_level == 3:
-            current_level += 1
+        if len(current_level) == 3:
+            current_level.append(1)
         else:
-            current_level += 2
+            current_level.append(1)
+            current_level.append(1)
+        print(len(enemies))
         new_level(current_level)
     if keys_pressed[K_RSHIFT]:
         player1.shot = True
