@@ -1,6 +1,7 @@
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
+from winsound import PlaySound
 import pygame
 import sys  
 import os
@@ -115,7 +116,7 @@ class Enemy:
     def hurtbox_detection(self):
         if pygame.Rect.colliderect(player1.bullet, self.hurtbox) or pygame.Rect.colliderect(player1.hurtbox, self.hurtbox):
             self.hit = True
-        if self.enemyy + 32 == HEIGHT:
+        if self.enemyy + 32 == HEIGHT - 200:
             self.hit_end == True
 
 #End of class definition
@@ -254,6 +255,10 @@ while True:
             player1.score += 1
             player1.shot = False
             del enemies[i]
+        if enemies[i].hit_end:
+            player1.score -= 1
+            del enemies[i]
+
 
     #Lets the code stop running when the window is closed
     for event in pygame.event.get():
