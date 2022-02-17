@@ -129,6 +129,10 @@ player1 = Player()
 filler_enemy = Enemy(-1000, -1000)
 enemies = [Enemy(105, 150), Enemy(145, 150), Enemy(185, 150), filler_enemy]
 
+
+#Variable to keep track of the levels that have passed
+current_level = 3
+#Function that generates a new rows of enemies when the previous one has been cleared
 def new_level(level):
     global movement_unitx
     spacing_ammount = 50
@@ -143,46 +147,7 @@ def new_level(level):
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
         spacing_ammount += 30
-        
 
-
-
-
-#Variable to keep track of the levels that have passed
-current_level = 3
-#Function to spawn new enemies when a level has been cleared
-def new_level_unstable(level):
-    if len(enemies) <= 1 :
-        for i in level:
-            #if i >= len(level) / 2:
-                #break
-            if len(level) >= 4:
-                spacing_ammount = (len(level) * -20)
-                for j in level:
-                    if j >= len(level) / 2:
-                        break
-                    spacing_ammount += 40
-                    enemies.insert(0, Enemy((WIDTH / 2) + spacing_ammount))
-                else:
-                    spacing_ammount = 0
-                    for k in level:
-                        if k >= len(level) / 2:
-                            break
-                        spacing_ammount += 40
-                        if k >= 1:
-                            enemies.insert(0, Enemy((WIDTH / 2) + spacing_ammount, spacing_ammount))
-                        else:
-                            enemies.insert(0, Enemy((WIDTH / 2) + spacing_ammount))
-
-            else:
-                spacing_ammount = 60
-                for l in level:
-                    if l >= len(level) / 2:
-                        break
-                    spacing_ammount += 40
-                    enemies.insert(0, Enemy(WIDTH / 2) + spacing_ammount)
-
-#Function that lets the player loses a life when conditions are met
 movement_unitx = -1
 #Setting the enemy movement variables
 #Function to allow the enemies to move across the screen in an orderly fashion
