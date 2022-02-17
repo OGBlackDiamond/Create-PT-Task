@@ -16,7 +16,7 @@ pygame.display.set_caption("Create Task Entry")
 WIDTH, HEIGHT = 320, 450
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 #Gets the background image. I made it myself
-BACKGROUND = pygame.image.load(os.path.join('Images', 'Background.png'))
+BACKGROUND = pygame.image.load(os.path.join('Images', 'Background.png')) 
 #Setting the speed (Frames Per Second) at which the app runs
 FPS = 60
 #Timer variable to keep track of the current FPS
@@ -143,7 +143,7 @@ def new_level(level):
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
         spacing_ammount += 30
-    return(level)
+        
 
 
 
