@@ -141,7 +141,7 @@ def new_level(level):
     for i in range(level):
         if level >= 5:
             if i >= ((level / 2) - 1):
-                enemies.insert(0, Enemy(((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 25) + 50), 110))
+                enemies.insert(0, Enemy(((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 25)), 110))
             else:
                 enemies.insert(0, Enemy((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 5)))
         else:
