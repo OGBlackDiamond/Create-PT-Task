@@ -142,7 +142,7 @@ def new_level(level):
                 enemies.insert(0, Enemy((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 5)))
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
-        spacing_ammount += 30
+        spacing_ammount += 40
         
 
 
