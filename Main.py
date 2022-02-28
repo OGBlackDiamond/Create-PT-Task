@@ -6,25 +6,28 @@ import pygame
 import sys  
 import os
 from pygame import K_RSHIFT, draw
-#Initializing the font for the score
-pygame.font.init()
 #Initializing the meathods for pygame
 pygame.init()
+#Initializing the font for the score
+pygame.font.init()
 #Setting the window title
 pygame.display.set_caption("Create Task Entry")
 #Defining and setting the window size
 WIDTH, HEIGHT = 320, 450
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-#Gets the background image. I made it myself
+#Gets the background picture, I made the image
 BACKGROUND = pygame.image.load(os.path.join('Images', 'Background.png')) 
 #Setting the speed (Frames Per Second) at which the app runs
 FPS = 60
 #Timer variable to keep track of the current FPS
 timer = 0
+
+
 ############################################################
 ############################################################
 ############################################################
-#Defining a player class such that its meathods can be used more easily
+
+#Defining a player class such that its meathods can be used more easily with minimal confusion
 class Player:
     #Initializing the class variables
     def __init__(self):
