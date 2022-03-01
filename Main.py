@@ -1,7 +1,6 @@
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
-from winsound import PlaySound
 import pygame
 import sys  
 import os
