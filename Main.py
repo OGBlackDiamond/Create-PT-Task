@@ -1,10 +1,14 @@
+##########################################################
+##                    Create PT Task                    ##
+##                   Galaga-Esque Game                  ##
+##########################################################
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
 import pygame
+from pygame import K_RSHIFT, draw
 import sys  
 import os
-from pygame import K_RSHIFT, draw
 #Initializing the meathods for pygame
 pygame.init()
 #Initializing the font for the score
@@ -44,12 +48,12 @@ class Player:
         #https://galaxian.fandom.com/wiki/Gyaraga
         self.raw_player_image = pygame.image.load(os.path.join("Images", "Galaga Ship.png"))
         self.player_image = pygame.transform.scale(self.raw_player_image, (self.player_sizex, self.player_sizey))
-    #Draw the player on the screen with its attributes
+    #Function to draw the player on the screen with its attributes
     def draw(self):
         if self.shot:
             pygame.draw.rect(WIN, (255, 0, 0), player1.bullet)
         WIN.blit(self.player_image, (self.playerx, self.playery))
-    #Allow for the player to move about the screen within reason.
+    #Function to let the player to move about the screen within set constraints.
     def movement(self):
         #If the player is hitting a barrier, dont allow them to move
         if self.hit_wall == False:
@@ -75,7 +79,7 @@ class Player:
         else:
             self.hit_wall = False
 
-    #Allow the player to shoot bullets
+    #Funtion to allow the player to shoot bullets
     def shoot(self):
         #Shoots the bullet
         if self.shot:
@@ -85,16 +89,13 @@ class Player:
         if self.shot == False:
             self.bullet.x = self.playerx
             self.bullet.y = self.playery
-
-    #Allow the player to lose a life when the enemies touch the player or the end of the screen
-
-        
+ 
 #End of class definition  
 
 
         
         
-#Defining an enemy class so we can make more than one very easily
+#Defining an enemy class so I can make more than one very easily
 class Enemy:
     #Initializing the class variables
     def __init__(self, x, y = 150):
@@ -109,12 +110,12 @@ class Enemy:
         #https://supersmashbros.fandom.com/wiki/Boss_Galaga
         self.raw_enemy_image = pygame.image.load(os.path.join("Images", "Galaga Enemy.png"))
         self.enemy_image = pygame.transform.scale(self.raw_enemy_image, (self.enemy_sizex, self.enemy_sizey))
-    #Drawing the enemy on the screen
+    #Function to draw the enemy on the screen
     def draw(self):
         if self.hit == False:
             self.hurtbox = pygame.Rect(self.enemyx, self.enemyy, self.enemy_sizex, self.enemy_sizey)
             WIN.blit(self.enemy_image, (self.enemyx, self.enemyy))
-    #Telling if the enemy has been hit
+    #Funtion to tell if the enemy has been hit
     def hurtbox_detection(self):
         if pygame.Rect.colliderect(player1.bullet, self.hurtbox) or pygame.Rect.colliderect(player1.hurtbox, self.hurtbox):
             self.hit = True
@@ -123,11 +124,10 @@ class Enemy:
 
 #End of class definition
 
-#Class instance definition
+#Class instance definitions
 player1 = Player() 
-#List containing all of the enemies on the screen, this can be appended and removed based
-#On the actions being taken by the user
-#Making a filler object, so the list can be looped through effectivley. 
+#List containing all of the enemies on the screen, this can be appended and removed based on the actions being taken by the user
+#Making a filler object, so the list can be looped through effectivley
 filler_enemy = Enemy(-1000, -1000)
 enemies = [Enemy(105, 150), Enemy(145, 150), Enemy(185, 150), filler_enemy]
 
@@ -149,10 +149,10 @@ def new_level(level):
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
         spacing_ammount += 40
-        
 
-movement_unitx = -1
+
 #Setting the enemy movement variables
+movement_unitx = -1
 #Function to allow the enemies to move across the screen in an orderly fashion
 def enemy_movement():
     global movement_unitx
@@ -167,7 +167,7 @@ def enemy_movement():
         #Loop to move all of the enemies by the movement unit
         enemies[i].enemyx += movement_unitx
             
-#Draws all of the necessary elements on the screen
+#Function to draw all of the necessary elements on the screen
 def draw():
     WIN.blit(BACKGROUND, (0, 0))
     player1.draw()
@@ -187,7 +187,7 @@ def draw_text(text, size, posx, posy):
     WIN.blit(text_display,(posx, posy))
 
 
-#Making the game loop
+#Main game loop that runs all of the commands and functions
 while True:
     #Using the FPS variable to run the app
     clock = pygame.time.Clock()
@@ -200,35 +200,38 @@ while True:
     #Getting user input
     keys_pressed = pygame.key.get_pressed()
 
-    #Main game loop
+    #Body of the program
     draw()
     enemy_movement()
     player1.movement()
+    #Checking if all of the enemies have been eliminated
     if len(enemies) <= 1:
         current_level += 1
+        #Making a new row of enemies
         new_level(current_level)
+    #Managing the player's ability to shoot
     if keys_pressed[K_RSHIFT]:
         player1.shot = True
     if player1.bullet.y <= 0:
         player1.shot = False
     player1.shoot()
-    #Making sure the filler enemy stays at the back of the list
-    del enemies[len(enemies) - 1]
-    enemies.append(filler_enemy)
     #This loop checks if the enemy has been hit by one of the player's bullets
     for i in range(len(enemies) - 1):
-        enemies[i].hurtbox_detection()
-        #Removing the enemy from the list, should it be hit
-        if enemies[i].hit:
-            player1.score += 1
-            player1.shot = False
-            del enemies[i]
-        if enemies[i].hit_end:
-            player1.score -= 1
-            del enemies[i]
+        #Only checks if the enemies have been hit if the player has shot a bullet
+        if player1.shot == True:
+            enemies[i].hurtbox_detection()
+            #Removing the enemy from the list, should it be hit
+            if enemies[i].hit:
+                player1.score += 1
+                player1.shot = False
+                del enemies[i]
+            #Removing the enemy if it has reached the bottom of the screen
+            elif enemies[i].hit_end:
+                player1.score -= 1
+                del enemies[i]
 
 
-    #Lets the code stop running when the window is closed
+    #Lets the code stop running when the window is closed or when the 'ESC' key is pressed
     for event in pygame.event.get():
         if event.type == pygame.QUIT or keys_pressed[pygame.K_ESCAPE]:
             pygame.quit()
