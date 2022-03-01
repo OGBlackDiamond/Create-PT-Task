@@ -2,6 +2,15 @@
 ##                    Create PT Task                    ##
 ##                   Galaga-Esque Game                  ##
 ##########################################################
+##########################################################
+
+#CONTROLS:
+#Arrow keys to move, right shift to fire, ESC to exit the game
+
+##########################################################
+##########################################################
+
+
 #Basic Imports for the game to run correctly
 #Pete Shinners (2011). PyGame - Python Game Development
 #http://www.pygame.org
