@@ -157,8 +157,12 @@ def new_level(level):
                 enemies.insert(0, Enemy((((WIDTH / 2) + starting_pos) + spacing_ammount) - (level * 5)))
         else:
             enemies.insert(0, Enemy(((WIDTH / 2) + starting_pos) + spacing_ammount))
+<<<<<<< Updated upstream
         spacing_ammount += 40
 
+=======
+        spacing_ammount += 30
+>>>>>>> Stashed changes
 
 #Setting the enemy movement variables
 movement_unitx = -1
